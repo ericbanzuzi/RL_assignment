@@ -5,7 +5,7 @@ rewards: [20, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -1]
 init_pos_diver: [1, 8]
 
 ## Game frames per second. Default: 60 Recommended: 1000
-frames_per_second: 10000
+frames_per_second: 1000
 
 ## Player type or nature. Possible values: "ai_rl" or "random". Default: "ai_rl"
 player_type: "random"
@@ -18,7 +18,7 @@ alpha: 0.1
 gamma: 0.1
 
 # Disables the graphical engine of the simulator (true by default)
-headless: true
+headless: false
 
 ## Epsilon initial
 epsilon_initial: 1

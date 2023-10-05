@@ -282,6 +282,7 @@ class PlayerControllerRandom(PlayerController):
         end_episode = False
         # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
         # Initialize a numpy array with ns state rows and na state columns with zeros
+        n = np.zeros((ns, na))
         # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
 
         while episode <= self.episode_max:
@@ -294,7 +295,8 @@ class PlayerControllerRandom(PlayerController):
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
                 # Chose an action from all possible actions and add to the counter of actions per state
-                action = None
+                action = possible_actions[np.random.randint(len(possible_actions))]
+                n[s_current, action] += 1
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
 
                 action_str = self.action_list[action]
