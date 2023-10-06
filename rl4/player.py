@@ -204,7 +204,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 list_pos = self.allowed_moves[s_current]
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX 5
-                # Use the epsilon greedy algorithm to retrieve an action
+                # Use the epsilon greedy algorithm to retrieve an action, using linear
                 action = epsilon_greedy(Q, s_current, list_pos, current_total_steps, self.epsilon_initial,
                                         self.epsilon_final, self.annealing_timesteps, 'linear')
                 # ADD YOUR CODE SNIPPET BETWEEN EX 5

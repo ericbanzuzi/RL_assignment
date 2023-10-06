@@ -192,14 +192,9 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 list_pos = self.allowed_moves[s_current]
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
-                # Chose an action from all possible actions
-                action = np.nanargmax(Q[s_current])  # TODO: verify if this is correct
-                # action = list_pos[np.random.randint(len(list_pos))]
+                # Choose the best action from all possible actions, ignore nans
+                action = np.nanargmax(Q[s_current])
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
-
-                # ADD YOUR CODE SNIPPET BETWEEN EX 5
-                # Use the epsilon greedy algorithm to retrieve an action
-                # ADD YOUR CODE SNIPPET BETWEEN EX 5
 
                 # compute reward
                 action_str = self.action_list[action]

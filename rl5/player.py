@@ -157,7 +157,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         self.episode_max = self.settings.episode_max
         self.alpha_final = 0.001
         self.alpha_initial = self.settings.alpha
-        self.N = 10
+        self.N = 5
 
         q = self.q_learning()
 
@@ -203,16 +203,17 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         current_total_steps = 0
         steps = 0
         highest_Rs = []
+        highest_R_found = -np.inf
 
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.3
         # Change the while loop to incorporate a threshold limit, to stop training when the mean difference
         # in the Q table is lower than the threshold
         while episode <= self.episode_max and diff > self.threshold:
-            # TODO: ask TA :(
+            # and not self.similar_Rs(highest_Rs, highest_R_found)
             s_current = init_pos
             R_total = 0
             steps = 0
-            highest_R = -np.inf
+            highest_R_episode = -np.inf
             while not end_episode:
                 # selection of action
                 list_pos = self.allowed_moves[s_current]
@@ -220,7 +221,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 # ADD YOUR CODE SNIPPET BETWEEN EX 5
                 # Use the epsilon greedy algorithm to retrieve an action
                 action = epsilon_greedy(Q, s_current, list_pos, current_total_steps, self.epsilon_initial,
-                                        self.epsilon_final, self.annealing_timesteps, 'linear')
+                                        self.epsilon_final, self.annealing_timesteps, 'constant')
                 # ADD YOUR CODE SNIPPET BETWEEN EX 5
 
                 # compute reward
@@ -245,8 +246,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 s_current = s_next
                 current_total_steps += 1
                 steps += 1
-                highest_R = np.max([highest_R, R])
-
+            highest_R_episode = np.max([highest_R_episode, R_total])
             # ADD YOUR CODE SNIPPET BETWEEN EX. 2.3
             # Compute the absolute value of the mean between the Q and Q-old
             diff = np.abs(np.nanmean(Q-Q_old))
@@ -254,16 +254,18 @@ class PlayerControllerRL(PlayerController, FishesModelling):
             Q_old[:] = Q
             print("Episode: {}, Steps {}, Diff: {:6e}, Total Reward: {}, Total Steps {}"
                   .format(episode, steps, diff, R_total, current_total_steps))
-            if len(highest_Rs) < self.N:
-                highest_Rs.append(highest_R)
-            else:
-                del highest_Rs[0]
-                highest_Rs.append(highest_R)
+            # if len(highest_Rs) < self.N:
+            #     highest_Rs.append(highest_R_episode)
+            # else:
+            #     del highest_Rs[0]
+            #     highest_Rs.append(highest_R_episode)
 
             episode += 1
             end_episode = False
-            self.alpha = alpha_decay(self.alpha_initial, self.alpha_final,
-                                     current_total_steps, self.annealing_timesteps)
+            # highest_R_found = np.max([highest_R_episode, highest_R_found])
+            # self.alpha = alpha_decay(self.alpha_initial, self.alpha_final,
+            #                          current_total_steps, self.annealing_timesteps)
+            self.alpha = np.max([0.01, 0.99*self.alpha])
 
         return Q
 
@@ -276,6 +278,15 @@ class PlayerControllerRL(PlayerController, FishesModelling):
             policy[(state_tuple[0],
                     state_tuple[1])] = list_actions[max_actions[n]]
         return policy
+
+    def similar_Rs(self, R_list, highest_R_found):
+        if len(R_list) < self.N or highest_R_found != 11:
+            return False
+
+        epsilon = 0.2
+        similar_Rs = np.all(np.abs(np.array(R_list)-np.mean(R_list)) < epsilon)
+        similar_to_highest = np.all(np.abs(np.array(R_list)-highest_R_found) < epsilon)
+        return similar_to_highest and similar_Rs
 
 
 class PlayerControllerRandom(PlayerController):
@@ -381,5 +392,8 @@ class ScheduleLinear(object):
     def value(self, t):
         # ADD YOUR CODE SNIPPET BETWEEN EX 4.2
         # Return the annealed linear value
-        return self.initial_p
+        e_delta = self.final_p - self.initial_p  # -0.499
+        e_t = self.initial_p + e_delta*(t/self.schedule_timesteps)
+        return e_t
         # ADD YOUR CODE SNIPPET BETWEEN EX 4.2
+

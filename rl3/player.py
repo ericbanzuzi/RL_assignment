@@ -193,7 +193,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 list_pos = self.allowed_moves[s_current]
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
-                # Chose an action from all possible actions
+                # Chose an action from all possible actions, ignore nans
                 action = np.nanargmax(Q[s_current])
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
 
