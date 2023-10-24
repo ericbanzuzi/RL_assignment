@@ -105,8 +105,9 @@ def epsilon_greedy(Q,
         if P < (1-epsilon):
             action = np.nanargmax(Q[state])
         else:
-            # action = all_actions[np.random.randint(len(all_actions))]
             action = np.random.choice(all_actions, 1, p=[1/len(all_actions) for _ in range(len(all_actions))])[0]
+            # select a random action from the all_actions list with the following probabilities (uniform):
+            # p=[1/len(all_actions) for _ in range(len(all_actions))]: list giving probabilities of selecting each action in the actions list
         # ADD YOUR CODE SNIPPET BETWEEN EX 4.1
 
     elif eps_type == 'linear':
