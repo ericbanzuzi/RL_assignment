@@ -291,10 +291,12 @@ class PlayerControllerRandom(PlayerController):
             steps = 0
             while not end_episode:
                 # all possible actions
-                possible_actions = self.allowed_moves[s_current]
+                possible_actions = self.allowed_moves[s_current] # gives the possible actions as a list 
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
-                # Chose an action from all possible actions and add to the counter of actions per state
+                # Chose an action from all possible actions and add to the counter of actions per state:
+                # take a random element from the possible_actions list by choosing a random number in the range [0, len(possible_actions) -1] 
+                # and use that number (index) to pick the action from the list of actions
                 action = possible_actions[np.random.randint(len(possible_actions))]
                 n[s_current, action] += 1
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
